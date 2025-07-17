@@ -22,10 +22,8 @@ export async function startBot(token, guildId) {
 
     if (interaction.commandName === 'active') {
       try {
-        await interaction.deferReply({ ephemeral: false });  // Defer reply to avoid timeout
-        await interaction.editReply(
-          "Congrats! You've used an application command. That's enough for the Active Developer Badge. 🏅"
-        );
+        await interaction.deferReply();
+        await interaction.editReply("Congrats! You've used an application command. That's enough for the Active Developer Badge. 🏅");
       } catch (err) {
         console.error('Error handling interaction:', err);
       }
@@ -34,7 +32,6 @@ export async function startBot(token, guildId) {
 
   await client.login(token);
 
-  // Wait for ready before registering commands
   await new Promise(resolve => client.once('ready', resolve));
 
   const rest = new REST({ version: '10' }).setToken(token);
