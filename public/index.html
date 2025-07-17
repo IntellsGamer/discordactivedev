@@ -33,6 +33,11 @@
       position: relative;
     }
 
+    a {
+      color: #00ffff;
+      text-shadow: 0 0 6px #00ffff;
+    }
+
     .stars {
       position: fixed;
       top: 0;
@@ -233,12 +238,9 @@
       button.setAttribute('aria-busy', 'true');
 
       status.style.color = '#00ffab';
-      status.innerHTML = `
-        ⌛ Bot is running, please wait...<br>
-        💡 To use it, run the command in Discord:<br>
-        <code>/active</code><br>
-        ⚠️ You might have to wait a little and refresh Discord to see the command.
-      `;
+      status.innerHTML = "
+        ⌛ Bot is running, please wait...<br>💡 To use it, run the command in Discord:<br><code>/active</code><br>⚠️ You might have to wait a little and refresh Discord to see the command.
+      ";
 
       try {
         const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
