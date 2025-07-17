@@ -1,21 +1,115 @@
 <!DOCTYPE html>
-<html>
-<head><title>Start Bot</title></head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Start Discord Bot</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --accent: #5865F2;
+      --background: linear-gradient(135deg, #1e1e2f, #2f2f40);
+      --font: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: var(--background);
+      color: white;
+      font-family: var(--font);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .container {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 40px;
+      max-width: 600px;
+      text-align: center;
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 1s ease-out;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    input {
+      padding: 12px;
+      width: 100%;
+      max-width: 400px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      margin-bottom: 20px;
+      font-size: 1rem;
+    }
+
+    button {
+      background: var(--accent);
+      border: none;
+      color: white;
+      padding: 12px 24px;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #4752c4;
+    }
+
+    #status {
+      margin-top: 20px;
+      font-size: 0.95rem;
+      background: rgba(0,0,0,0.2);
+      padding: 10px 20px;
+      border-radius: 10px;
+      white-space: pre-wrap;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
 <body>
-  <h1>Activate Your Developer Badge</h1>
-  <form onsubmit="start(event)">
-    <input id="token" placeholder="Paste your bot token" style="width: 400px" required />
-    <button type="submit">Start Bot</button>
-  </form>
-  <p id="status"></p>
+  <div class="container">
+    <h1>Activate Your Developer Badge</h1>
+    <form onsubmit="start(event)">
+      <input id="token" type="text" placeholder="Paste your bot token here..." required />
+      <br />
+      <button type="submit">🚀 Start Bot</button>
+    </form>
+    <div id="status"></div>
+  </div>
+
   <script>
     async function start(e) {
       e.preventDefault();
       const token = document.getElementById('token').value;
       const status = document.getElementById('status');
-      const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
-      const text = await res.text();
-      status.innerText = text;
+      status.innerText = '⏳ Starting bot... please wait.';
+      try {
+        const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
+        const text = await res.text();
+        status.innerText = text;
+      } catch (err) {
+        status.innerText = '❌ Failed to start bot. See console.';
+        console.error(err);
+      }
     }
   </script>
 </body>
