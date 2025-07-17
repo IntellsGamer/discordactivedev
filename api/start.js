@@ -22,7 +22,16 @@ export default async function handler(req, res) {
     if (interaction.commandName === 'active') {
       try {
         await interaction.deferReply();
-        await interaction.editReply('You’ve used an application command! ✅');
+        await interaction.editReply(
+          "✅ You’ve used an application command!\n\n" +
+          "To claim your **Active Developer Badge**, follow these steps:\n" +
+          "1. Visit **https://discord.com/developers/active-developer**.\n" +
+          "2. Select your application (the bot that just responded).\n" +
+          "3. Click **Claim Badge**.\n\n" +
+          "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
+          "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
+        );
+
       } catch (err) {
         console.error('Interaction error:', err);
       }
