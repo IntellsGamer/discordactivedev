@@ -252,6 +252,77 @@
                 opacity: 0.4;
             }
         }
+
+        #modalOverlay {
+            position: fixed;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+        }
+
+        .modal-backdrop {
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(3px);
+        }
+
+        .modal-content {
+            position: relative;
+            z-index: 101;
+            background: rgba(20, 20, 40, 0.95);
+            border-radius: 16px;
+            padding: 28px 24px;
+            max-width: 90%;
+            width: 400px;
+            color: #fff;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeIn 0.3s ease-out;
+            font-size: 0.95rem;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+            color: #82b1ff;
+            text-shadow: 0 0 8px #1e88e580;
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+        }
+
+        .modal-content ol {
+            padding-left: 1.2rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content li {
+            margin-bottom: 8px;
+        }
+
+        .modal-content a {
+            color: #00ffff;
+            text-decoration: underline;
+        }
+
+        .modal-content button {
+            display: block;
+            margin-left: auto;
+            background: #5865F2;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
+            transition: background 0.3s ease;
+        }
+
+        .modal-content button:hover {
+            background: #4752c4;
+        }
     </style>
 </head>
 
@@ -266,6 +337,39 @@
                 required autocomplete="off" spellcheck="false" />
             <button type="submit" aria-live="polite" aria-busy="false">🚀 Start Bot</button>
         </form>
+
+        <p style="margin-top: 8px;">
+            <a href="#" id="openHelp" style="font-size: 0.9rem; color: #82cfff;">How do I run a bot?</a>
+        </p>
+
+        <div id="modalOverlay" style="display: none;">
+            <div class="modal-backdrop"></div>
+            <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+                <h2 id="modalTitle">How to Run Your Discord Bot</h2>
+                <ol>
+                    <li>Go to the <a href="https://discord.com/developers/applications" target="_blank"
+                            rel="noopener">Discord Developer Portal</a> and select your bot application or create one.
+                    </li>
+                    <li>Go to the <strong>Bot</strong> tab, then scroll to <em>Privileged Gateway Intents</em> and
+                        enable all three intents: <em>Presence Intent</em>, <em>Server Members Intent</em>, and
+                        <em>Message Content Intent</em>.</li>
+                    <li>Next, go to the <strong>Installation</strong> tab:
+                        <ul>
+                            <li>Under <strong>Installation Contexts</strong>, uncheck <em>User Install</em> and leave
+                                only <em>Guild Install</em> checked.</li>
+                            <li>Set <strong>Install Link</strong> to <em>None</em>.</li>
+                        </ul>
+                    </li>
+                    <li>Go to <strong>OAuth2 → URL Generator</strong>, choose the <code>bot</code> scope.</li>
+                    <li>For Bot Permissions, select <strong>Administrator</strong>.</li>
+                    <li>Copy the generated invite URL and open it in a browser to invite your bot to your server.</li>
+                    <li>Back in Discord, type <code>/active</code> to use the bot's command. If the command doesn't
+                        appear, refresh Discord.</li>
+                </ol>
+
+                <button id="closeModal">Close</button>
+            </div>
+        </div>
 
         <div id="status" aria-live="polite" aria-atomic="true" role="status"></div>
     </main>
@@ -311,6 +415,21 @@
                 button.setAttribute('aria-busy', 'false');
             }
         }
+
+        document.getElementById("openHelp").addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("modalOverlay").style.display = "flex";
+        });
+
+        document.getElementById("closeModal").addEventListener("click", () => {
+            document.getElementById("modalOverlay").style.display = "none";
+        });
+
+        document.getElementById("modalOverlay").addEventListener("click", (e) => {
+            if (e.target.id === "modalOverlay" || e.target.classList.contains("modal-backdrop")) {
+                document.getElementById("modalOverlay").style.display = "none";
+            }
+        });
     </script>
 </body>
 
