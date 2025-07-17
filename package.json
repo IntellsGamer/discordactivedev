@@ -1,11 +1,7 @@
 {
   "name": "discordactivedev",
   "version": "1.0.0",
-  "type": "module",
-  "main": "bot/runner.js",
-  "scripts": {
-    "start": "node bot/runner.js"
-  },
+  "main": "api/start.js",
   "dependencies": {
     "discord.js": "^14.13.0"
   }
