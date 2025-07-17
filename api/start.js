@@ -56,10 +56,10 @@ console.log('✅ Slash command registered');
 
 // Keep the connection alive for ~10 seconds before closing
 setTimeout(() => {
-console.log('⌛ Bot shutting down after 10 seconds.');
+console.log('⌛ Bot shutting down after 60 seconds.');
 client.destroy();
-res.end('Bot stopped after 10 seconds.');
-}, 10000);
+res.end('Bot stopped after 60 seconds.');
+}, 60000);
 
 } catch (error) {
 console.error(error);
