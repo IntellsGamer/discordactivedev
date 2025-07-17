@@ -15,7 +15,7 @@
     <meta name="theme-color" content="#5865F2" />
 
     <style>
-        body {  
+        body {
             margin: 0;
             font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
             background: radial-gradient(ellipse at bottom, #0d1b2a 0%, #000000 100%);
@@ -195,6 +195,23 @@
             }
         }
 
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+        }
+
+        .modal-content.fade-out {
+            animation: fadeOut 0.3s ease forwards;
+        }
+
+
         @media (max-width: 640px) {
 
             html,
@@ -265,8 +282,8 @@
         .modal-backdrop {
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.65);
-            backdrop-filter: blur(3px);
+            background: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(1px);
         }
 
         .modal-content {
@@ -417,18 +434,31 @@
             }
         }
 
+        const modalOverlay = document.getElementById("modalOverlay");
+        const modalContent = document.querySelector(".modal-content");
+
         document.getElementById("openHelp").addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById("modalOverlay").style.display = "flex";
+            // Remove fade-out class in case it was left from last close
+            modalContent.classList.remove("fade-out");
+            modalOverlay.style.display = "flex";
         });
 
-        document.getElementById("closeModal").addEventListener("click", () => {
-            document.getElementById("modalOverlay").style.display = "none";
-        });
+        function closeModal() {
+            if (modalContent.classList.contains("fade-out")) return; // prevent double close
 
-        document.getElementById("modalOverlay").addEventListener("click", (e) => {
+            modalContent.classList.add("fade-out");
+            modalContent.addEventListener("animationend", () => {
+                modalOverlay.style.display = "none";
+                modalContent.classList.remove("fade-out");
+            }, { once: true });
+        }
+
+        document.getElementById("closeModal").addEventListener("click", closeModal);
+
+        modalOverlay.addEventListener("click", (e) => {
             if (e.target.id === "modalOverlay" || e.target.classList.contains("modal-backdrop")) {
-                document.getElementById("modalOverlay").style.display = "none";
+                closeModal();
             }
         });
     </script>
