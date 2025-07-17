@@ -391,7 +391,7 @@
             button.setAttribute('aria-busy', 'true');
 
             status.style.color = '#00ffab';
-            status.innerHTML = "⌛ Bot is running, please wait...<br>💡 To use it, run in Discord: <code>/active</code><br>🔄️ You might have to refresh Discord to see the command.<br>⚠️ Bot will shut down after 10 minutes.";
+            status.innerHTML = "⌛ Bot is running, please wait...<br>💡 To use it, run in Discord: <code>/active</code><br>✅ You might have to refresh Discord to see the command.<br>⚠️ Bot will shut down after 10 minutes.";
 
             try {
                 const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
