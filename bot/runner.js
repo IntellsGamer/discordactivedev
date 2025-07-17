@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-const RUNTIME_MS = 86400000; // 24 hours
+const RUNTIME_MS = 60000; // 10 minutes
 let client;
 
 export async function startBot(token, guildId) {
@@ -57,7 +57,7 @@ export async function startBot(token, guildId) {
 
     await new Promise(resolve => setTimeout(resolve, RUNTIME_MS));
 
-    console.log('🛑 Shutting down bot after 24 hours.');
+    console.log('🛑 Shutting down bot after 10 minutes.');
     await client.destroy();
 
   } catch (err) {
