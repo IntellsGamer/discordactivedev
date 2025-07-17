@@ -4,18 +4,16 @@ let client;
 
 export default async function handler(req, res) {
   const token = req.query.token || process.env.DISCORD_TOKEN;
-  if (!token) {
-    return res.status(400).send('Missing token.');
-  }
+  if (!token) return res.status(400).send('Missing token');
 
   if (client && client.isReady()) {
-    return res.status(409).send('Bot already running.');
+    return res.status(200).send('Bot already running.');
   }
 
   client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
   client.once('ready', () => {
-    console.log(`🤖 Logged in as ${client.user.tag}`);
+    console.log(🤖 Logged in as ${client.user.tag});
   });
 
   client.on('interactionCreate', async (interaction) => {
@@ -33,6 +31,7 @@ export default async function handler(req, res) {
           "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
           "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
         );
+
       } catch (err) {
         console.error('Interaction error:', err);
       }
@@ -55,22 +54,15 @@ export default async function handler(req, res) {
 
     console.log('✅ Slash command registered');
 
-    // Send success response immediately after registering command and login
-    res.status(200).send('Bot started and listening for 10 seconds...');
-
-    // Keep connection alive for 10 seconds, then shut down
+    // Keep the connection alive for ~10 seconds before closing
     setTimeout(() => {
       console.log('⌛ Bot shutting down after 10 seconds.');
       client.destroy();
-      client = null;
+      res.end('Bot stopped after 10 seconds.');
     }, 10000);
 
   } catch (error) {
-    console.error('Failed to start bot:', error);
-
-    // Make sure to only send response if not already sent
-    if (!res.writableEnded) {
-      res.status(500).send('Failed to start bot.');
-    }
+    console.error(error);
+    res.status(500).send('Failed to start bot.');
   }
 }
