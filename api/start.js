@@ -1,10 +1,10 @@
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require('discord.js');
+import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
 let botStarted = false;
 let client;
 
-module.exports = async (req, res) => {
-  const { token, guildId } = req.query;
+export default async function handler(req, res) {
+  const { token } = req.query;
 
   if (!token) {
     return res.status(400).send('Missing token');
@@ -24,15 +24,12 @@ module.exports = async (req, res) => {
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
-
     if (interaction.commandName === 'active') {
       try {
-        await interaction.deferReply({ ephemeral: false });
-        await interaction.editReply(
-          'You’ve used an application command! ✅ You now qualify for the Active Developer Badge.'
-        );
+        await interaction.deferReply();
+        await interaction.editReply('You’ve used an application command! ✅ You now qualify for the Active Developer Badge.');
       } catch (err) {
-        console.error('Error handling interaction:', err);
+        console.error('Interaction error:', err);
       }
     }
   });
@@ -40,27 +37,17 @@ module.exports = async (req, res) => {
   try {
     await client.login(token);
 
-    // Wait for ready before registering commands
-    await new Promise(resolve => client.once('ready', resolve));
-
     const rest = new REST({ version: '10' }).setToken(token);
     const app = await client.application.fetch();
-
     const command = new SlashCommandBuilder()
       .setName('active')
       .setDescription('Get the Active Developer Badge');
 
-    if (guildId) {
-      await rest.put(Routes.applicationGuildCommands(app.id, guildId), {
-        body: [command.toJSON()],
-      });
-      console.log(`✅ Slash command registered in guild ${guildId}`);
-    } else {
-      await rest.put(Routes.applicationCommands(app.id), {
-        body: [command.toJSON()],
-      });
-      console.log('✅ Global slash command registered');
-    }
+    await rest.put(Routes.applicationCommands(app.id), {
+      body: [command.toJSON()],
+    });
+
+    console.log('✅ Slash command registered');
 
     // Stop bot after 48 hours
     setTimeout(() => {
@@ -73,4 +60,4 @@ module.exports = async (req, res) => {
     console.error(err);
     res.status(500).send('Failed to start bot.');
   }
-};
+}
