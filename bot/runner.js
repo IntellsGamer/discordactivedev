@@ -1,59 +1,64 @@
-// api/start.js
-const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require('discord.js');
+import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-let botStarted = false;
+const EXPIRATION_MS = 1000 * 60 * 60 * 48; // 48 hours
+const START_TIME = Date.now();
 
-module.exports = async (req, res) => {
-  const { token } = req.query;
+let client;
 
-  if (!token) {
-    return res.status(400).send('Missing token');
+export async function startBot(token, guildId) {
+  if (Date.now() > START_TIME + EXPIRATION_MS) {
+    console.log('Bot expired.');
+    return;
   }
 
-  if (botStarted) {
-    return res.status(200).send('Bot already running.');
-  }
-
-  botStarted = true;
-
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
   client.once('ready', () => {
-    console.log(`🤖 Logged in as ${client.user.tag}`);
+    console.log(`Bot logged in as ${client.user.tag}`);
   });
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
+
     if (interaction.commandName === 'active') {
-      await interaction.reply('You’ve used an application command! ✅ You now qualify for the Active Developer Badge.');
+      try {
+        await interaction.deferReply({ ephemeral: false });  // Defer reply to avoid timeout
+        await interaction.editReply(
+          "Congrats! You've used an application command. That's enough for the Active Developer Badge. 🏅"
+        );
+      } catch (err) {
+        console.error('Error handling interaction:', err);
+      }
     }
   });
 
+  await client.login(token);
+
+  // Wait for ready before registering commands
+  await new Promise(resolve => client.once('ready', resolve));
+
+  const rest = new REST({ version: '10' }).setToken(token);
+  const command = new SlashCommandBuilder()
+    .setName('active')
+    .setDescription('Helps you qualify for the Active Developer Badge');
+
   try {
-    await client.login(token);
+    const appData = await client.application.fetch();
 
-    // Register command
-    const rest = new REST({ version: '10' }).setToken(token);
-    const app = await client.application.fetch();
-    const command = new SlashCommandBuilder()
-      .setName('active')
-      .setDescription('Get the Active Developer Badge');
-
-    await rest.put(Routes.applicationCommands(app.id), {
-      body: [command.toJSON()],
-    });
-
-    console.log('✅ Slash command registered');
-
-    // Stop bot after 48 hours
-    setTimeout(() => {
-      console.log('⌛ Bot shutting down after 48h.');
-      process.exit(0);
-    }, 1000 * 60 * 60 * 48);
-
-    res.status(200).send('Bot is running. Slash command registered.');
+    if (guildId) {
+      await rest.put(
+        Routes.applicationGuildCommands(appData.id, guildId),
+        { body: [command.toJSON()] }
+      );
+      console.log(`Slash command registered in guild ${guildId}.`);
+    } else {
+      await rest.put(
+        Routes.applicationCommands(appData.id),
+        { body: [command.toJSON()] }
+      );
+      console.log('Global slash command registered.');
+    }
   } catch (err) {
-    console.error(err);
-    res.status(500).send('Failed to start bot.');
+    console.error('Error registering command:', err);
   }
-};
+}
