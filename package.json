@@ -1,13 +1,11 @@
 {
-  "name": "active-badge-bot",
+  "name": "discord-active-badge",
   "version": "1.0.0",
   "type": "module",
-  "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node api/start.js"
   },
   "dependencies": {
-    "discord.js": "^14.11.0",
-    "dotenv": "^16.3.1"
+    "discord.js": "^14.11.0"
   }
 }
