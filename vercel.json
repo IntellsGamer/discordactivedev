@@ -1,4 +1,15 @@
 {
+  "headers": [
+    {
+      "source": "/sitemap.xml",
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/xml"
+        }
+      ]
+    }
+  ],
   "routes": [
     { "src": "/api/start", "dest": "/api/start.js" },
     { "src": "/(.*)", "dest": "/public/index.html" }
