@@ -1,20 +1,14 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-let botStarted = false;
 let client;
 
 export default async function handler(req, res) {
-  const { token } = req.query;
+  const token = req.query.token || process.env.DISCORD_TOKEN;
+  if (!token) return res.status(400).send('Missing token');
 
-  if (!token) {
-    return res.status(400).send('Missing token');
-  }
-
-  if (botStarted) {
+  if (client && client.isReady()) {
     return res.status(200).send('Bot already running.');
   }
-
-  botStarted = true;
 
   client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
@@ -24,10 +18,11 @@ export default async function handler(req, res) {
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
+
     if (interaction.commandName === 'active') {
       try {
         await interaction.deferReply();
-        await interaction.editReply('You’ve used an application command! ✅ You now qualify for the Active Developer Badge.');
+        await interaction.editReply('You’ve used an application command! ✅');
       } catch (err) {
         console.error('Interaction error:', err);
       }
@@ -39,6 +34,7 @@ export default async function handler(req, res) {
 
     const rest = new REST({ version: '10' }).setToken(token);
     const app = await client.application.fetch();
+
     const command = new SlashCommandBuilder()
       .setName('active')
       .setDescription('Get the Active Developer Badge');
@@ -49,15 +45,15 @@ export default async function handler(req, res) {
 
     console.log('✅ Slash command registered');
 
-    // Stop bot after 48 hours
+    // Keep the connection alive for ~10 seconds before closing
     setTimeout(() => {
-      console.log('⌛ Bot shutting down after 48h.');
-      process.exit(0);
-    }, 1000 * 60 * 60 * 48);
+      console.log('⌛ Bot shutting down after 10 seconds.');
+      client.destroy();
+      res.end('Bot stopped after 10 seconds.');
+    }, 10000);
 
-    res.status(200).send('Bot is running. Slash command registered.');
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
     res.status(500).send('Failed to start bot.');
   }
 }
