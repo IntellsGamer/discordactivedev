@@ -217,11 +217,12 @@
       
       status.style.color = '#00ffab';
       status.innerHTML = `
-        ⌛ Bot is running, please wait...<br>
-        💡 To use it, run the command in Discord:<br>
-        <code>/active</code><br>
-        ⚠️ You might have to wait a little bit and Refresh Discord to see the command,
-      `;
+  ⌛ Bot is running, please wait...<br>
+  💡 To use it, run the command in Discord:<br>
+  <code>/active</code><br>
+  ⚠️ You might have to wait a little and refresh Discord to see the command.
+`;
+
 
       try {
         const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
