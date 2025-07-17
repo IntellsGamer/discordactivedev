@@ -3,27 +3,25 @@ import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'di
 let client;
 
 export default async function handler(req, res) {
-  const token = req.query.token || process.env.DISCORD_TOKEN;
-  if (!token) {
-    return res.status(400).send('Missing token.');
-  }
+const token = req.query.token || process.env.DISCORD_TOKEN;
+if (!token) return res.status(400).send('Missing token');
 
-  if (client && client.isReady()) {
-    return res.status(409).send('Bot already running.');
-  }
+if (client && client.isReady()) {
+return res.status(200).send('Bot already running.');
+}
 
-  client = new Client({ intents: [GatewayIntentBits.Guilds] });
+client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
-  client.once('ready', () => {
-    console.log(`🤖 Logged in as ${client.user.tag}`);
-  });
+client.once('ready', () => {
+console.log(`🤖 Logged in as ${client.user.tag}`);
+});
 
-  client.on('interactionCreate', async (interaction) => {
-    if (!interaction.isChatInputCommand()) return;
+client.on('interactionCreate', async (interaction) => {
+if (!interaction.isChatInputCommand()) return;
 
-    if (interaction.commandName === 'active') {
-      try {
-        await interaction.deferReply();
+if (interaction.commandName === 'active') {
+try {
+await interaction.deferReply();
         await interaction.editReply(
           "✅ You’ve used an application command!\n\n" +
           "To claim your **Active Developer Badge**, follow these steps:\n" +
@@ -33,44 +31,38 @@ export default async function handler(req, res) {
           "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
           "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
         );
-      } catch (err) {
-        console.error('Interaction error:', err);
-      }
-    }
-  });
 
-  try {
-    await client.login(token);
+} catch (err) {
+console.error('Interaction error:', err);
+}
+}
+});
 
-    const rest = new REST({ version: '10' }).setToken(token);
-    const app = await client.application.fetch();
+try {
+await client.login(token);
 
-    const command = new SlashCommandBuilder()
-      .setName('active')
-      .setDescription('Get the Active Developer Badge');
+const rest = new REST({ version: '10' }).setToken(token);
+const app = await client.application.fetch();
 
-    await rest.put(Routes.applicationCommands(app.id), {
-      body: [command.toJSON()],
-    });
+const command = new SlashCommandBuilder()
+.setName('active')
+.setDescription('Get the Active Developer Badge');
 
-    console.log('✅ Slash command registered');
+await rest.put(Routes.applicationCommands(app.id), {
+body: [command.toJSON()],
+});
 
-    // Send success response immediately after registering command and login
-    res.status(200).send('Bot started and listening for 10 seconds...');
+console.log('✅ Slash command registered');
 
-    // Keep connection alive for 10 seconds, then shut down
-    setTimeout(() => {
-      console.log('⌛ Bot shutting down after 10 seconds.');
-      client.destroy();
-      client = null;
-    }, 10000);
+// Keep the connection alive for ~10 seconds before closing
+setTimeout(() => {
+console.log('⌛ Bot shutting down after 10 seconds.');
+client.destroy();
+res.end('Bot stopped after 10 seconds.');
+}, 10000);
 
-  } catch (error) {
-    console.error('Failed to start bot:', error);
-
-    // Make sure to only send response if not already sent
-    if (!res.writableEnded) {
-      res.status(500).send('Failed to start bot.');
-    }
-  }
+} catch (error) {
+console.error(error);
+res.status(500).send('Failed to start bot.');
+}
 }
