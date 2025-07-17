@@ -56,10 +56,10 @@ export default async function handler(req, res) {
 
         // Keep the connection alive for ~10 seconds before closing
         setTimeout(() => {
-            console.log('⌛ Bot shutting down after 24 hours.');
+            console.log('⌛ Bot shutting down after 10 minutes.');
             client.destroy();
-            res.end('Bot stopped after 24 hours.');
-        }, 86400000);
+            res.end('Bot stopped after 10 minutes.');
+        }, 60000);
 
     } catch (error) {
         console.error(error);
