@@ -24,6 +24,7 @@
       color: #ffffff;
       min-height: 100vh;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       text-align: center;
@@ -54,7 +55,6 @@
       }
     }
 
-    /* Container & styling adapted from (1) + (2) */
     .container {
       z-index: 1;
       background: rgba(20, 20, 40, 0.85);
@@ -165,6 +165,19 @@
       text-align: left;
     }
 
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      text-align: center;
+      background: rgba(50, 98, 194, 0.85);
+      color: white;
+      font-size: 0.95rem;
+      padding: 12px 0;
+      z-index: 10;
+      backdrop-filter: blur(6px);
+    }
+
     @keyframes fadeIn {
       from {
         opacity: 0;
@@ -201,6 +214,10 @@
     <div id="status" aria-live="polite" aria-atomic="true" role="status"></div>
   </main>
 
+  <footer>
+    © 2025 <a href="https://github.com/IntellsGamer/">IntellsGamer</a>. All rights reserved.
+  </footer>
+
   <script>
     async function start(e) {
       e.preventDefault();
@@ -214,15 +231,14 @@
 
       button.disabled = true;
       button.setAttribute('aria-busy', 'true');
-      
+
       status.style.color = '#00ffab';
       status.innerHTML = `
-  ⌛ Bot is running, please wait...<br>
-  💡 To use it, run the command in Discord:<br>
-  <code>/active</code><br>
-  ⚠️ You might have to wait a little and refresh Discord to see the command.
-`;
-
+        ⌛ Bot is running, please wait...<br>
+        💡 To use it, run the command in Discord:<br>
+        <code>/active</code><br>
+        ⚠️ You might have to wait a little and refresh Discord to see the command.
+      `;
 
       try {
         const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
