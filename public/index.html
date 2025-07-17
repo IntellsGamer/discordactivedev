@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Activate Developer Badge Bot</title>
+</head>
+<body>
+  <h1>Start Discord Bot for Active Dev Badge</h1>
+  <form onsubmit="startBot(event)">
+    <label for="token">Bot Token:</label>
+    <input type="text" id="token" required style="width: 400px" />
+    <button type="submit">Start Bot</button>
+  </form>
+  <p id="status"></p>
+
+  <script>
+    async function startBot(e) {
+      e.preventDefault();
+      const token = document.getElementById('token').value;
+      const status = document.getElementById('status');
+
+      status.innerText = 'Starting...';
+      const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
+      const text = await res.text();
+      status.innerText = text;
+    }
+  </script>
+</body>
+</html>
