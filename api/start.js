@@ -1,10 +1,10 @@
-// api/start.js
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } = require('discord.js');
 
 let botStarted = false;
+let client;
 
 module.exports = async (req, res) => {
-  const { token } = req.query;
+  const { token, guildId } = req.query;
 
   if (!token) {
     return res.status(400).send('Missing token');
@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
 
   botStarted = true;
 
-  const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+  client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
   client.once('ready', () => {
     console.log(`🤖 Logged in as ${client.user.tag}`);
@@ -32,6 +32,9 @@ module.exports = async (req, res) => {
   try {
     await client.login(token);
 
+    // Wait for ready before registering
+    await new Promise(resolve => client.once('ready', resolve));
+
     // Register command
     const rest = new REST({ version: '10' }).setToken(token);
     const app = await client.application.fetch();
@@ -39,11 +42,17 @@ module.exports = async (req, res) => {
       .setName('active')
       .setDescription('Get the Active Developer Badge');
 
-    await rest.put(Routes.applicationCommands(app.id), {
-      body: [command.toJSON()],
-    });
-
-    console.log('✅ Slash command registered');
+    if (guildId) {
+      await rest.put(Routes.applicationGuildCommands(app.id, guildId), {
+        body: [command.toJSON()],
+      });
+      console.log(`✅ Slash command registered in guild ${guildId}`);
+    } else {
+      await rest.put(Routes.applicationCommands(app.id), {
+        body: [command.toJSON()],
+      });
+      console.log('✅ Global slash command registered');
+    }
 
     // Stop bot after 48 hours
     setTimeout(() => {
