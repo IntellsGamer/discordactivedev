@@ -108,7 +108,7 @@
       e.preventDefault();
       const token = document.getElementById('token').value;
       const status = document.getElementById('status');
-      status.innerText = '⏳ Starting bot... please wait.';
+      status.innerText = '✅ Bot started. Please do /active';
       try {
         const res = await fetch(`/api/start?token=${encodeURIComponent(token)}`);
         const text = await res.text();
