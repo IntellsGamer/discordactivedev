@@ -24,20 +24,28 @@ module.exports = async (req, res) => {
 
   client.on('interactionCreate', async (interaction) => {
     if (!interaction.isChatInputCommand()) return;
+
     if (interaction.commandName === 'active') {
-      await interaction.reply('You’ve used an application command! ✅ You now qualify for the Active Developer Badge.');
+      try {
+        await interaction.deferReply({ ephemeral: false });
+        await interaction.editReply(
+          'You’ve used an application command! ✅ You now qualify for the Active Developer Badge.'
+        );
+      } catch (err) {
+        console.error('Error handling interaction:', err);
+      }
     }
   });
 
   try {
     await client.login(token);
 
-    // Wait for ready before registering
+    // Wait for ready before registering commands
     await new Promise(resolve => client.once('ready', resolve));
 
-    // Register command
     const rest = new REST({ version: '10' }).setToken(token);
     const app = await client.application.fetch();
+
     const command = new SlashCommandBuilder()
       .setName('active')
       .setDescription('Get the Active Developer Badge');
