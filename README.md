@@ -4,10 +4,6 @@
 
 ## 🚀 One-click Deploy
 
-### 🟣 Deploy to Railway
-
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/project?repository=https://github.com/IntellsGamer/discordactivedev)
-
 ### ⚫ Deploy to Vercel
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/project?template=https://github.com/IntellsGamer/discordactivedev)
