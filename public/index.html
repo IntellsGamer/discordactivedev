@@ -328,19 +328,29 @@
         .modal-content button {
             display: block;
             margin-left: auto;
-            background: #5865F2;
-            border: none;
+            background: linear-gradient(120deg, #00bcd4, #6a2ec9, #df1462);
+            background-size: 300% 300%;
+            background-position: left center;
             color: white;
-            padding: 10px 20px;
-            border-radius: 12px;
+            border: none;
+            border-radius: 30px;
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 12px 28px;
             cursor: pointer;
-            font-weight: bold;
-            box-shadow: 0 0 10px rgba(88, 101, 242, 0.4);
-            transition: background 0.3s ease;
+            box-shadow: 0 0 12px rgba(0, 188, 212, 0.6);
+            transition: transform 0.3s ease,
+                box-shadow 0.3s ease,
+                background-position 0.6s ease-in-out;
         }
 
-        .modal-content button:hover {
-            background: #4752c4;
+
+        .modal-content button:hover,
+        .modal-content button:focus {
+            background-position: right center;
+            transform: translateY(-2px) scale(1.02);
+            /* box-shadow: 0 0 24px rgba(0, 188, 212, 0.9); */
+            outline: none;
         }
     </style>
 </head>
@@ -376,7 +386,8 @@
                             <li>Set <strong>Install Link</strong> to <em>None</em>.</li>
                         </ul>
                     </li>
-                    <li>Next, go to the <strong>Bot</strong> tab, make it private, then scroll to <em>Privileged Gateway Intents</em> and
+                    <li>Next, go to the <strong>Bot</strong> tab, make it private, then scroll to <em>Privileged Gateway
+                            Intents</em> and
                         enable all three intents: <em>Presence Intent</em>, <em>Server Members Intent</em>, and
                         <em>Message Content Intent</em>.
                     </li>
@@ -441,13 +452,12 @@
 
         document.getElementById("openHelp").addEventListener("click", (e) => {
             e.preventDefault();
-            // Remove fade-out class in case it was left from last close
             modalContent.classList.remove("fade-out");
             modalOverlay.style.display = "flex";
         });
 
         function closeModal() {
-            if (modalContent.classList.contains("fade-out")) return; // prevent double close
+            if (modalContent.classList.contains("fade-out")) return;
 
             modalContent.classList.add("fade-out");
             modalContent.addEventListener("animationend", () => {
