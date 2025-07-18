@@ -59,7 +59,7 @@ export default async function handler(req, res) {
             console.log('⌛ Bot shutting down after 10 minutes.');
             client.destroy();
             res.end('Bot stopped after 10 minutes.');
-        }, 60000);
+        }, 600000);
 
     } catch (error) {
         console.error(error);
