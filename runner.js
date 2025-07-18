@@ -1,6 +1,6 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-const EXPIRATION_MS = 1000 * 60 * 60 * 48; // 48 hours
+const EXPIRATION_MS = 1000 * 60 * 5; // 5 minutes
 const START_TIME = Date.now();
 
 let client;
