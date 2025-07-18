@@ -14,7 +14,7 @@
 
 - Starts a minimal Discord bot.
 - Waits 10 minutes, then exits (enough to get the Active Developer badge).
-- Hosted either on Vercel (hacky) or Railway (recommended).
+- Hosted either on Vercel.
 - No extra steps required, just registers `/active` which sending it once is enough for getting the badge.
 
 ## ⚙️ Environment Variable
