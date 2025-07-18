@@ -6,7 +6,7 @@
 
 ### 🟣 Deploy to Railway
 
-[![Deploy on Railway](https://railway.app/button.svg)](https://railway.app/new/template?template=https://github.com/IntellsGamer/discordactivedev)
+[![Deploy with Railway](https://railway.app/button.svg)](https://railway.app/new/project?repository=https://github.com/IntellsGamer/discordactivedev)
 
 ### ⚫ Deploy to Vercel
 
