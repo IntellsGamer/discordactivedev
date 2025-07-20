@@ -4,13 +4,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Currently under Maintenance</title>
+    <title>Site under Maintenance</title>
     <meta name="theme-color" content="#111827" />
     <meta property="og:title" content="Site Under Maintenance" />
     <meta property="og:description" content="We're improving things behind the scenes. Be right back!" />
-    <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ryanfortner/assets@main/maintenance.png" />
-    <meta property="og:url" content="https://yourdomain.com/" />
-
+    <meta property="og:url" content="https://discord-active-dev.vercel.app/" />
+    
     <style>
         * {
             box-sizing: border-box;
@@ -132,7 +131,7 @@
     <h1 class="glow">🚧 We'll Be Right Back!</h1>
 
     <p style="font-size: 0.85rem; color: #ccc; margin-top: -1rem; margin-bottom: 1.5rem;">
-        We'll refresh this page every 15 seconds so you won't miss any important news 🙂
+        We'll refresh this page every 15 seconds so you won't miss any important news :)
     </p>
 
     <p>We're currently performing some <span class="glow">epic upgrades</span> to make your experience even better.<br>
@@ -150,9 +149,13 @@
         All rights reserved.
     </footer>
     <script>
-        // Refresh after 15 seconds
+        // // Refresh after 15 seconds
+        // setTimeout(() => {
+        //     window.location.reload();
+        // }, 15000);
+
         setTimeout(() => {
-            window.location.reload();
+            window.location.href = "index.html";
         }, 15000);
     </script>
 </body>
