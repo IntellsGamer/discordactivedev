@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Currently under Maintenance</title>
+    <meta name="theme-color" content="#111827" />
+    <meta property="og:title" content="Site Under Maintenance" />
+    <meta property="og:description" content="We're improving things behind the scenes. Be right back!" />
+    <meta property="og:image" content="https://cdn.jsdelivr.net/gh/ryanfortner/assets@main/maintenance.png" />
+    <meta property="og:url" content="https://yourdomain.com/" />
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body {
+            height: 100%;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(to bottom, #0f2027, #203a43, #2c5364);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .glow {
+            color: #00ffff;
+            text-shadow: 0 0 8px #00ffff, 0 0 16px #00ffff33;
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            45% {
+                opacity: 0.8;
+            }
+
+            60% {
+                opacity: 0.6;
+            }
+
+            75% {
+                opacity: 1;
+            }
+        }
+
+        .loader {
+            border: 6px solid rgba(255, 255, 255, 0.1);
+            border-top: 6px solid #00ffff;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1.5s linear infinite;
+            margin-bottom: 2rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* YOUR ORIGINAL FOOTER STYLE */
+        footer {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.1);
+            color: white;
+            padding: 1rem;
+            position: relative;
+            width: 100%;
+            font-size: 0.95rem;
+        }
+
+        footer a {
+            color: #00ffff;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 600px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            p {
+                font-size: 1rem;
+                padding: 0 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="loader"></div>
+    <h1 class="glow">🚧 We'll Be Right Back!</h1>
+
+    <p style="font-size: 0.85rem; color: #ccc; margin-top: -1rem; margin-bottom: 1.5rem;">
+        We'll refresh this page every 15 seconds so you won't miss any important news 🙂
+    </p>
+
+    <p>We're currently performing some <span style="color:#60a5fa">epic upgrades</span> to make your experience even
+        better.<br>Please check back soon. 💙</p>
+
+    <!-- <p>In the meantime, you can follow us on <a href="https://github.com/IntellsGamer" style="color:#60a5fa">Github</a>
+        for updates.</p> -->
+
+    <footer
+        style="position: fixed; bottom: 0; width: 100%; text-align: center; background-color: rgba(0, 0, 0, 0.1); color: white; padding: 1rem; z-index: 10; backdrop-filter: blur(2px); font-size: 0.95rem;">
+        © 2025 <a href="https://github.com/IntellsGamer/" style="color:#00ffff; text-decoration:none;">IntellsGamer</a>.
+        All rights reserved.
+    </footer>
+    <script>
+        // Refresh after 15 seconds
+        setTimeout(() => {
+            window.location.reload();
+        }, 15000);
+    </script>
+</body>
+
+</html>
