@@ -1,0 +1,12 @@
+{
+  "name": "discord-active-badge",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "api/start.js",
+  "scripts": {
+    "start": "node api/start.js"
+  },
+  "dependencies": {
+    "discord.js": "^14.11.0"
+  }
+}
