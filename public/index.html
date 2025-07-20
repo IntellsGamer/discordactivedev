@@ -16,6 +16,10 @@
     <meta property="og:url" content="https://discord-active-dev.vercel.app/" />
     <meta name="theme-color" content="#2fa867" />
 
+    <script>
+        window.location.href = 'maintenance.html';
+    </script>
+
     <style>
         body {
             margin: 0;
@@ -410,8 +414,6 @@
     </footer>
 
     <script>
-        window.location.href = '/maintenance.html';
-
         async function start(e) {
             e.preventDefault();
             const token = document.getElementById('token').value.trim();
