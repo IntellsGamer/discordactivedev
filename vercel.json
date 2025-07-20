@@ -1,6 +1,6 @@
 {
   "routes": [
     { "src": "/api/start", "dest": "/api/start.js" },
-    { "src": "/(.*)", "dest": "/public/maintanance.html" }
+    { "src": "/(.*)", "dest": "/public/maintenance.html" }
   ]
 }
