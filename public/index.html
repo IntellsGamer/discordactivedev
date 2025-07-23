@@ -400,7 +400,7 @@
 </head>
 
 <body>
-    <noscript>
+    <!-- <noscript>
         <div style="
     position: fixed;
     inset: 0;
@@ -415,9 +415,27 @@
     text-align: center;
     padding: 2rem;
   ">
-            <a href="https://enablejs.com/" target="_blank" rel="noopener">Enable JavaScript to continue</a>
+            Enable JavaScript to continue
+            <a href="https://enablejs.com/" target="_blank" rel="noopener"></a>
         </div>
+    </noscript> -->
+
+    <noscript>
+        <main class="container" role="alert" aria-live="assertive" style="z-index: 1000;">
+            <style>
+                body> :not(noscript):not(main) {
+                    display: none !important;
+                }
+            </style>
+
+            <h1>🚫 JavaScript Required</h1>
+            <p style="font-size: 1.05rem; margin-top: 1rem;">
+                This website requires JavaScript to function properly.<br />
+                Please enable JavaScript in your browser settings and reload.
+            </p>
+        </main>
     </noscript>
+
 
     <div class="stars"></div>
 
