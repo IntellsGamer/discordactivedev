@@ -181,46 +181,60 @@ export default async function handler(req, res) {
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
     clients.set(token, client);
 
-    client.once('ready', () => {
-        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
-    });
+    // Add listener ONCE only if not already added
+    if (!client._hasInteractionListener) {
+        client.on('interactionCreate', async (interaction) => {
+            if (!interaction.isChatInputCommand()) return;
 
-    client.on('interactionCreate', async (interaction) => {
-        if (!interaction.isChatInputCommand()) return;
-
-        if (interaction.commandName === 'active') {
-            try {
-                await interaction.deferReply();
-                await interaction.editReply(
-                    "✅ You've used an application command!\n\n" +
-                    "To claim your **Active Developer Badge**, follow these steps:\n" +
-                    "1. Visit **https://discord.com/developers/active-developer**.\n" +
-                    "2. Select your application (the bot that just responded).\n" +
-                    "3. Click **Claim Badge**.\n\n" +
-                    "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
-                    "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
-                );
-            } catch (err) {
-                console.error('Interaction error:', err);
+            if (interaction.commandName === 'active') {
+                try {
+                    await interaction.deferReply();
+                    await interaction.editReply(
+                        "✅ You've used an application command!\n\n" +
+                        "To claim your **Active Developer Badge**, follow these steps:\n" +
+                        "1. Visit **https://discord.com/developers/active-developer**.\n" +
+                        "2. Select your application (the bot that just responded).\n" +
+                        "3. Click **Claim Badge**.\n\n" +
+                        "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
+                        "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
+                    );
+                } catch (err) {
+                    console.error('Interaction error:', err);
+                }
             }
+        });
+        client._hasInteractionListener = true; // mark listener added
+    }
+
+    client.once('ready', async () => {
+        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
+
+        try {
+            // Now safe to fetch application and register commands
+            await client.application.fetch();
+
+            const rest = new REST({ version: '10' }).setToken(token);
+            const command = new SlashCommandBuilder()
+                .setName('active')
+                .setDescription('Get the Active Developer Badge');
+
+            await rest.put(Routes.applicationCommands(client.application.id), {
+                body: [command.toJSON()],
+            });
+
+            console.log('✅ Slash command registered');
+        } catch (error) {
+            console.error('Failed to register commands:', error);
         }
     });
 
     try {
-        await client.login(token);
-
-        const rest = new REST({ version: '10' }).setToken(token);
-        const app = await client.application.fetch();
-
-        const command = new SlashCommandBuilder()
-            .setName('active')
-            .setDescription('Get the Active Developer Badge');
-
-        await rest.put(Routes.applicationCommands(app.id), {
-            body: [command.toJSON()],
+        await client.login(token).catch(err => {
+            // catch login error explicitly
+            clients.delete(token);
+            console.error('Login error:', err);
+            throw err; // rethrow for outer catch
         });
-
-        console.log('✅ Slash command registered');
 
         // Block IP immediately after starting the bot
         blockedIPs.set(ip, now + COOLDOWN_MS);
@@ -237,11 +251,8 @@ export default async function handler(req, res) {
 ✅ You might have to refresh Discord to see the command.
 ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
 `);
-
-
     } catch (error) {
         clients.delete(token);
-        console.error('Login error:', error);
         res.status(500).send('Failed to start bot. Check token and try again.');
     }
 }
