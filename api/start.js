@@ -19,7 +19,14 @@ export default async function handler(req, res) {
     const now = Date.now();
 
     const isVpn = await isVPN(ip);
-    if (isVpn) {
+
+    const blockedIPList = [
+        '85.195.101.122',
+        '98.76.54.32',
+        '1.2.3.4'
+    ];
+
+    if (isVpn || blockedIPList.includes(ip)) {
         return res.status(403).send("VPN or Proxy detected. Please disable it to continue.");
     }
 
