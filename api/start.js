@@ -1,5 +1,4 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
-import fetch from 'node-fetch';
 
 const clients = new Map(); // token => client instance
 const blockedIPs = new Map(); // ip => unblock timestamp (ms)
