@@ -1,7 +1,8 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
+import { EdgeConfig } from '@vercel/edge-config';
 
 const clients = new Map(); // token => client instance
-const blockedIPs = new Map(); // ip => unblock timestamp (ms)
+const edgeConfig = new EdgeConfig({ project: 'discordactivedev-store' }); // Your Edge Config instance
 
 const COOLDOWN_MS = 30 * 60 * 1000; // 30 minutes
 
@@ -9,16 +10,19 @@ export default async function handler(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
     const now = Date.now();
 
-    // Check IP cooldown
-    if (blockedIPs.has(ip)) {
-        const unblockTime = blockedIPs.get(ip);
-        if (now < unblockTime) {
+    // Check IP cooldown using Edge Config
+    try {
+        const unblockTimeStr = await edgeConfig.get(`ip-block-${ip}`);
+        const unblockTime = unblockTimeStr ? Number(unblockTimeStr) : 0;
+
+        if (unblockTime && now < unblockTime) {
             const waitSec = Math.ceil((unblockTime - now) / 1000);
             const waitMinutes = Math.floor(waitSec / 60);
             return res.status(429).send(`Currently limited, please wait ${waitMinutes} minute${waitMinutes !== 1 ? 's' : ''}.`);
-        } else {
-            blockedIPs.delete(ip); // cooldown expired, remove from block list
         }
+    } catch (e) {
+        console.error('Edge Config read error:', e);
+        // If error reading Edge Config, fail open (allow request)
     }
 
     const token = req.query.token || process.env.DISCORD_TOKEN;
@@ -72,8 +76,12 @@ export default async function handler(req, res) {
 
         console.log('✅ Slash command registered');
 
-        // Block IP immediately after starting the bot
-        blockedIPs.set(ip, now + COOLDOWN_MS);
+        // Block IP immediately after starting the bot using Edge Config
+        try {
+            await edgeConfig.set(`ip-block-${ip}`, (now + COOLDOWN_MS).toString());
+        } catch (e) {
+            console.error('Edge Config write error:', e);
+        }
 
         setTimeout(() => {
             client.destroy();
@@ -87,7 +95,6 @@ export default async function handler(req, res) {
 ✅ You might have to refresh Discord to see the command.
 ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
 `);
-
 
     } catch (error) {
         clients.delete(token);
