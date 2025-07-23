@@ -254,7 +254,6 @@ export default async function handler(req, res) {
 ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
 `);
     } catch (error) {
-        clients.delete(token);
         res.status(500).send('Failed to start bot. Check token and try again.');
     }
 }
