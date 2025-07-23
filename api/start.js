@@ -6,19 +6,9 @@ const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
 const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
-
-async function isVPN(ip) {
-    const API_KEY = process.env.IPQS_KEY; // get a free key from ipqualityscore.com
-    const res = await fetch(`https://ipqualityscore.com/api/json/ip/${API_KEY}/${ip}`);
-    const data = await res.json();
-    return data.vpn || data.proxy || data.tor; // true if VPN/proxy/TOR detected
-}
-
 export default async function handler(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
     const now = Date.now();
-
-    const isVpn = await isVPN(ip);
 
     const blockedIPList = [
         '85.195.101.122',
@@ -26,7 +16,7 @@ export default async function handler(req, res) {
         '1.2.3.4'
     ];
 
-    if (isVpn || blockedIPList.includes(ip)) {
+    if (blockedIPList.includes(ip)) {
         return res.status(403).send("VPN or Proxy detected. Please disable it to continue.");
     }
 
