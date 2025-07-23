@@ -1,10 +1,8 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
 const blockedIPs = new Map(); // ip => unblock timestamp (ms)
-const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
-// Added: global map to track running bot tokens
-const runningTokens = new Map(); // token => true
+const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
 let client = null;
 let shutdownAt = null; // store the future shutdown time
@@ -166,16 +164,6 @@ export default async function handler(req, res) {
     const token = req.query.token || process.env.DISCORD_TOKEN;
     if (!token) return res.status(400).send('Missing token');
 
-    // --- START Added multi-token checks ---
-    if (runningTokens.has(token)) {
-        return res.status(429).send("Bot already running.");
-    }
-
-    if (runningTokens.size >= 10) {
-        return res.status(409).send("Website is busy.");
-    }
-    // --- END Added multi-token checks ---
-
     if (client && client.isReady()) {
         const msLeft = shutdownAt - Date.now();
         const minLeft = Math.ceil(msLeft / 60000);
@@ -219,7 +207,6 @@ export default async function handler(req, res) {
                 client.destroy();
                 client = null;
                 shutdownAt = null;
-                runningTokens.delete(token);  // <-- Added removal on bot stop here
                 console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
                 res.end(`Bot stopped due to command usage.`);
             } catch (err) {
@@ -228,14 +215,32 @@ export default async function handler(req, res) {
         }
     });
 
+    client.once('ready', async () => {
+        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
+
+        try {
+            await client.application.fetch();
+
+            const rest = new REST({ version: '10' }).setToken(token);
+            const command = new SlashCommandBuilder()
+                .setName('active')
+                .setDescription('Get the Active Developer Badge');
+
+            await rest.put(Routes.applicationCommands(client.application.id), {
+                body: [command.toJSON()],
+            });
+
+            console.log('✅ Slash command registered');
+        } catch (error) {
+            console.error('Failed to register commands:', error);
+        }
+    });
+
     try {
         await client.login(token).catch(err => {
             console.error('Login error:', err);
-            throw err;
+            throw err; // rethrow for outer catch
         });
-
-        // Added: Mark token as running after successful login
-        runningTokens.set(token, true);
 
         // Block IP immediately after starting the bot
         blockedIPs.set(ip, now + COOLDOWN_MS);
@@ -247,13 +252,16 @@ export default async function handler(req, res) {
             client.destroy();
             client = null;
             shutdownAt = null;
-            runningTokens.delete(token); // <-- Remove token when bot auto-stops
             console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
             return res.status(200).send(`Bot stopped after 5 minutes.`);
         }, lifetime);
 
-        // res.status(200).send("Bot started successfully. Use slash commands `/active` to interact.");
-
+        // res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        //         res.end(`⌛ Bot is running for 5 minutes...
+        // 💡 To use it, run in Discord: /active
+        // ✅ You might have to refresh Discord to see the command.
+        // ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
+        // `);
     } catch (error) {
         res.status(500).send('Failed to start bot. Check token and try again.');
     }
