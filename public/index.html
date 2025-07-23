@@ -543,6 +543,28 @@
                 return;
             }
 
+            async function isIncognito() {
+                return new Promise(resolve => {
+                    const fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+                    if (!fs) {
+                        resolve(false);
+                    } else {
+                        fs(window.TEMPORARY, 100, () => resolve(false), () => resolve(true));
+                    }
+                });
+            }
+
+            isIncognito().then((incognito) => {
+                if (incognito) {
+                    status.innerText = "⛔ Incognito mode detected. Access denied.";
+                    button.disabled = false;
+                    button.setAttribute('aria-busy', 'false');
+                    return;
+                } else {
+                    // normal behavior
+                }
+            });
+
             // if (!tokenPattern.test(token)) {
             //     button.disabled = false;
             //     button.setAttribute('aria-busy', 'false');
