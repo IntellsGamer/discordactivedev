@@ -3,7 +3,7 @@ import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'di
 const clients = new Map(); // token => client instance
 const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
-const COOLDOWN_MS = 30 * 60 * 1000; // 30 minutes
+const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
 export default async function handler(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
