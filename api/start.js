@@ -80,7 +80,7 @@ export default async function handler(req, res) {
             console.log(`⌛ Bot stopped for token ${token.substring(0, 8)}...`);
         }, 300000);
 
-        res.end('Bot started successfully.');
+        res.end("⌛ Bot is running for 5 minutes...<br>💡 To use it, run in Discord: <code>/active</code><br>✅ You might have to refresh Discord to see the command.<br>⚠️ <strong>NOTE:</strong> Make sure you have the <em>\"Use data to improve Discord\"</em> setting enabled under <strong>User Settings > Privacy & Safety</strong> otherwise you won't be able to be marked as eligible.");
 
     } catch (error) {
         clients.delete(token);
