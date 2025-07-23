@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         const unblockTime = blockedIPs.get(ip);
         if (now < unblockTime) {
             const waitSec = Math.ceil((unblockTime - now) / 1000);
-            return res.status(429).send(`⏳ Please wait ${waitSec} seconds before starting another bot.`);
+            return res.status(429).send(`Your are being limited, please wait ${waitSec} seconds before trying again.`);
         } else {
             blockedIPs.delete(ip); // cooldown expired, remove from block list
         }
@@ -80,7 +80,14 @@ export default async function handler(req, res) {
             console.log(`⌛ Bot stopped for token ${token.substring(0, 8)}...`);
         }, 300000);
 
-        res.end("⌛ Bot is running for 5 minutes...<br>💡 To use it, run in Discord: <code>/active</code><br>✅ You might have to refresh Discord to see the command.<br>⚠️ <strong>NOTE:</strong> Make sure you have the <em>\"Use data to improve Discord\"</em> setting enabled under <strong>User Settings > Privacy & Safety</strong> otherwise you won't be able to be marked as eligible.");
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end(`
+  ⌛ Bot is running for 5 minutes...<br>
+  💡 To use it, run in Discord: <code>/active</code><br>
+  ✅ You might have to refresh Discord to see the command.<br>
+  ⚠️ <strong>NOTE:</strong> Make sure you have the <em>"Use data to improve Discord"</em> setting enabled under <strong>User Settings &gt; Privacy & Safety</strong> otherwise you won't be able to be marked as eligible.
+`);
+
 
     } catch (error) {
         clients.delete(token);
