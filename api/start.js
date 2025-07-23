@@ -204,6 +204,11 @@ export default async function handler(req, res) {
                     "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
                     "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
                 );
+                client.destroy();
+                client = null;
+                shutdownAt = null;
+                console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
+                res.end(`Bot stopped due to command usage.`);
             } catch (err) {
                 console.error('Interaction error:', err);
             }
@@ -252,11 +257,11 @@ export default async function handler(req, res) {
         }, lifetime);
 
         // res.setHeader('Content-Type', 'text/html; charset=utf-8');
-//         res.end(`⌛ Bot is running for 5 minutes...
-// 💡 To use it, run in Discord: /active
-// ✅ You might have to refresh Discord to see the command.
-// ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
-// `);
+        //         res.end(`⌛ Bot is running for 5 minutes...
+        // 💡 To use it, run in Discord: /active
+        // ✅ You might have to refresh Discord to see the command.
+        // ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
+        // `);
     } catch (error) {
         res.status(500).send('Failed to start bot. Check token and try again.');
     }
