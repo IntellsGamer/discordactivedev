@@ -4,6 +4,9 @@ const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
 const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
+let client;
+let shutdownAt = null; // store the future shutdown time
+
 export default async function handler(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
     const now = Date.now();
@@ -161,8 +164,10 @@ export default async function handler(req, res) {
     const token = req.query.token || process.env.DISCORD_TOKEN;
     if (!token) return res.status(400).send('Missing token');
 
-    if (clients.has(token) && clients.get(token).isReady()) {
-        return res.status(200).send('Bot already running for this token.');
+    if (client && client.isReady()) {
+        const msLeft = shutdownAt - Date.now();
+        const minLeft = Math.ceil(msLeft / 60000);
+        return res.status(200).send(`Bot already running. Please wait ~${minLeft} minute(s).`);
     }
 
     // Check IP cooldown
@@ -206,7 +211,6 @@ export default async function handler(req, res) {
         console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
 
         try {
-            // Now safe to fetch application and register commands
             await client.application.fetch();
 
             const rest = new REST({ version: '10' }).setToken(token);
@@ -233,10 +237,15 @@ export default async function handler(req, res) {
         // Block IP immediately after starting the bot
         blockedIPs.set(ip, now + COOLDOWN_MS);
 
+        const lifetime = 5 * 60 * 1000; // 5 minutes
+        shutdownAt = Date.now() + lifetime;
+
         setTimeout(() => {
             client.destroy();
+            client = null;
+            shutdownAt = null;
             console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
-        }, 300000);
+        }, lifetime);
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.end(`⌛ Bot is running for 5 minutes...
