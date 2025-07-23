@@ -1,6 +1,5 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-const clients = new Map(); // token => client instance
 const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
 const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
@@ -178,14 +177,10 @@ export default async function handler(req, res) {
         }
     }
 
+    // Create single client instance
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
-    clients.set(token, client);
 
-    // Move this listener before login, no change needed here
-    client.once('ready', async () => {
-        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
-    });
-
+    // Add interaction listener ONCE
     client.on('interactionCreate', async (interaction) => {
         if (!interaction.isChatInputCommand()) return;
 
@@ -207,33 +202,40 @@ export default async function handler(req, res) {
         }
     });
 
+    client.once('ready', async () => {
+        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
+
+        try {
+            // Now safe to fetch application and register commands
+            await client.application.fetch();
+
+            const rest = new REST({ version: '10' }).setToken(token);
+            const command = new SlashCommandBuilder()
+                .setName('active')
+                .setDescription('Get the Active Developer Badge');
+
+            await rest.put(Routes.applicationCommands(client.application.id), {
+                body: [command.toJSON()],
+            });
+
+            console.log('✅ Slash command registered');
+        } catch (error) {
+            console.error('Failed to register commands:', error);
+        }
+    });
+
     try {
-        // Wait for client to be ready before registering commands
-        await client.login(token);
-
-        // Await ready event here before fetching and registering commands
-        await new Promise(resolve => client.once('ready', resolve));
-
-        const rest = new REST({ version: '10' }).setToken(token);
-        const app = await client.application.fetch();
-
-        const command = new SlashCommandBuilder()
-            .setName('active')
-            .setDescription('Get the Active Developer Badge');
-
-        await rest.put(Routes.applicationCommands(app.id), {
-            body: [command.toJSON()],
+        await client.login(token).catch(err => {
+            console.error('Login error:', err);
+            throw err; // rethrow for outer catch
         });
-
-        console.log('✅ Slash command registered');
 
         // Block IP immediately after starting the bot
         blockedIPs.set(ip, now + COOLDOWN_MS);
 
         setTimeout(() => {
             client.destroy();
-            clients.delete(token);
-            console.log(`⌛ Bot stopped for token ${token.substring(0, 8)}...`);
+            console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
         }, 300000);
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
