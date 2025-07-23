@@ -167,8 +167,9 @@ export default async function handler(req, res) {
     if (client && client.isReady()) {
         const msLeft = shutdownAt - Date.now();
         const minLeft = Math.ceil(msLeft / 60000);
+        const timeLeftStr = ``;
         if (shutdownAt) {
-            const timeLeftStr = ` Please wait ~${minLeft} minute(s).`
+            timeLeftStr = ` Please wait ~${minLeft} minute(s).`
         }
         return res.status(200).send(`Bot already running.${timeLeftStr}`);
     }
