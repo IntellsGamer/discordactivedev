@@ -171,7 +171,7 @@ export default async function handler(req, res) {
         if (shutdownAt) {
             timeLeftStr = ` Please wait ~${minLeft} minute(s).`
         }
-        return res.status(409).send(`Bot already running.${timeLeftStr}`);
+        return res.status(409).send(`Website is busy.${timeLeftStr}`);
     }
 
     // Check IP cooldown
