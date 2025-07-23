@@ -14,7 +14,8 @@ export default async function handler(req, res) {
         const unblockTime = blockedIPs.get(ip);
         if (now < unblockTime) {
             const waitSec = Math.ceil((unblockTime - now) / 1000);
-            return res.status(429).send(`Your are being limited, please wait ${waitSec} seconds before trying again.`);
+            const waitMinutes = Math.floor(waitSec / 60);
+            return res.status(429).send(`Currently limited, please wait ${waitMinutes} minute${waitMinutes !== 1 ? 's' : ''}.`);
         } else {
             blockedIPs.delete(ip); // cooldown expired, remove from block list
         }
