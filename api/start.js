@@ -171,7 +171,7 @@ export default async function handler(req, res) {
         if (shutdownAt) {
             timeLeftStr = ` Please wait ~${minLeft} minute(s).`
         }
-        return res.status(200).send(`Bot already running.${timeLeftStr}`);
+        return res.status(409).send(`Bot already running.${timeLeftStr}`);
     }
 
     // Check IP cooldown
@@ -248,9 +248,10 @@ export default async function handler(req, res) {
             client = null;
             shutdownAt = null;
             console.log(`⌛ Bot stopped (token: ${token.substring(0, 8)}...)`);
+            return res.status(200).send(`Bot stopped after 5 minutes.`);
         }, lifetime);
 
-        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        // res.setHeader('Content-Type', 'text/html; charset=utf-8');
 //         res.end(`⌛ Bot is running for 5 minutes...
 // 💡 To use it, run in Discord: /active
 // ✅ You might have to refresh Discord to see the command.
