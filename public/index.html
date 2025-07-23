@@ -276,6 +276,46 @@
             }
         }
 
+        /* Overlay container hidden by default */
+        #orientationOverlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 10, 20, 0.95);
+            /* filter: blur(3px); */
+            color: #82b1ff;
+            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            font-size: 1.3rem;
+            text-align: center;
+            padding: 2rem 1rem;
+            z-index: 9999;
+            user-select: none;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            line-height: 1.5;
+        }
+
+        /* Show overlay on landscape orientation and small screen */
+        @media (max-width: 960px) and (orientation: landscape) {
+            #orientationOverlay {
+                display: flex;
+            }
+
+            /* Optional: hide main content while overlay shown */
+            main.container {
+                filter: blur(3px);
+                pointer-events: none;
+                user-select: none;
+            }
+
+            footer {
+                display: none;
+            }
+        }
+
+
         #modalOverlay {
             position: fixed;
             inset: 0;
@@ -361,6 +401,11 @@
 
 <body>
     <div class="stars"></div>
+
+    <div id="orientationOverlay" role="alert" aria-live="assertive" aria-atomic="true" style="display:none;">
+            <p>Please rotate your device to <strong>portrait mode</strong> for the best experience.</p>
+            <!-- <p>🔄 Rotate your phone</p> -->
+        </div>
 
     <main class="container" tabindex="0" role="main" aria-label="Activate Developer Badge form">
         <h1>Get Your Developer Badge</h1>
@@ -486,6 +531,30 @@
                 closeModal();
             }
         });
+    </script>
+
+    <script>
+        (function () {
+            let debounceTimeout;
+            function checkOrientation() {
+                clearTimeout(debounceTimeout);
+                debounceTimeout = setTimeout(() => {
+                    const overlay = document.getElementById('orientationOverlay');
+                    const mq = window.matchMedia("(max-width: 960px) and (orientation: landscape)");
+                    // console.log('Orientation check:', mq.matches);
+                    if (mq.matches) {
+                        overlay.style.display = "flex";
+                    } else {
+                        overlay.style.display = "none";
+                    }
+                }, 150);
+            }
+
+            window.addEventListener('resize', checkOrientation);
+            window.addEventListener('orientationchange', checkOrientation);
+            document.addEventListener('DOMContentLoaded', checkOrientation);
+        })();
+
     </script>
 </body>
 
