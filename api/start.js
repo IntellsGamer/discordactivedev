@@ -185,8 +185,7 @@ export default async function handler(req, res) {
         }
     }
 
-    // Create single client instance
-    const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    client = new Client({ intents: [GatewayIntentBits.Guilds] });
 
     // Add interaction listener ONCE
     client.on('interactionCreate', async (interaction) => {
