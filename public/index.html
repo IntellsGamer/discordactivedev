@@ -485,6 +485,8 @@
         © 2025 <a href="https://github.com/IntellsGamer/">IntellsGamer</a>. All rights reserved.
     </footer>
 
+
+    <script src="https://cdn.jsdelivr.net/gh/Joe12387/detectIncognito@main/dist/es5/detectIncognito.min.js"></script>
     <script>
         if (
             window.location.hostname.endsWith(".vercel.app") &&
@@ -554,20 +556,29 @@
             //     });
             // }
 
-            async function isIncognito() {
-                var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
-                if (!fs) {
-                    return false;
-                }
-                fs(window.TEMPORARY, 100, function (fs) {
-                    return false;
-                }, function (err) {
-                    return true;
-                });
-            }
+            // async function isIncognito() {
+            //     var fs = window.RequestFileSystem || window.webkitRequestFileSystem;
+            //     if (!fs) {
+            //         return false;
+            //     }
+            //     fs(window.TEMPORARY, 100, function (fs) {
+            //         return false;
+            //     }, function (err) {
+            //         return true;
+            //     });
+            // }
 
-            isIncognito().then((incognito) => {
-                if (incognito) {
+            // isIncognito().then((incognito) => {
+            //     if (incognito) {
+            //         status.innerText = "⛔ Incognito mode detected. Access denied.";
+            //         button.disabled = false;
+            //         button.setAttribute('aria-busy', 'false');
+            //         return;
+            //     }
+            // });
+
+            detectIncognito().then(result => {
+                if (result.isPrivate) {
                     status.innerText = "⛔ Incognito mode detected. Access denied.";
                     button.disabled = false;
                     button.setAttribute('aria-busy', 'false');
