@@ -1,13 +1,34 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
+import fetch from 'node-fetch';
 
 const clients = new Map(); // token => client instance
 const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
 const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
+
+async function isVPN(ip) {
+    const API_KEY = process.env.IPQS_KEY; // get a free key from ipqualityscore.com
+    const res = await fetch(`https://ipqualityscore.com/api/json/ip/${API_KEY}/${ip}`);
+    const data = await res.json();
+    return data.vpn || data.proxy || data.tor; // true if VPN/proxy/TOR detected
+}
+
 export default async function handler(req, res) {
     const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
     const now = Date.now();
+
+    const isVpn = await isVPN(ip);
+    if (isVpn) {
+        return res.status(403).send("VPN or Proxy detected. Please disable it to continue.");
+    }
+
+    const token = req.query.token || process.env.DISCORD_TOKEN;
+    if (!token) return res.status(400).send('Missing token');
+
+    if (clients.has(token) && clients.get(token).isReady()) {
+        return res.status(200).send('Bot already running for this token.');
+    }
 
     // Check IP cooldown
     if (blockedIPs.has(ip)) {
@@ -19,13 +40,6 @@ export default async function handler(req, res) {
         } else {
             blockedIPs.delete(ip); // cooldown expired, remove from block list
         }
-    }
-
-    const token = req.query.token || process.env.DISCORD_TOKEN;
-    if (!token) return res.status(400).send('Missing token');
-
-    if (clients.has(token) && clients.get(token).isReady()) {
-        return res.status(200).send('Bot already running for this token.');
     }
 
     const client = new Client({ intents: [GatewayIntentBits.Guilds] });
