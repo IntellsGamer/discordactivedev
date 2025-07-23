@@ -82,10 +82,10 @@ export default async function handler(req, res) {
 
         res.setHeader('Content-Type', 'text/html; charset=utf-8');
         res.end(`
-  ⌛ Bot is running for 5 minutes...<br>
-  💡 To use it, run in Discord: <code>/active</code><br>
-  ✅ You might have to refresh Discord to see the command.<br>
-  ⚠️ <strong>NOTE:</strong> Make sure you have the <em>"Use data to improve Discord"</em> setting enabled under <strong>User Settings &gt; Privacy & Safety</strong> otherwise you won't be able to be marked as eligible.
+  ⌛ Bot is running for 5 minutes...
+  💡 To use it, run in Discord: /active
+  ✅ You might have to refresh Discord to see the command.
+  ⚠️ NOTE: Make sure you have the "Use data to improve Discord" setting enabled under User Settings &gt; Privacy & Safety otherwise you won't be able to be marked as eligible.
 `);
 
 
