@@ -4,7 +4,7 @@ const blockedIPs = new Map(); // ip => unblock timestamp (ms)
 
 const COOLDOWN_MS = 10 * 60 * 1000; // 10 minutes
 
-let client;
+let client = null;
 let shutdownAt = null; // store the future shutdown time
 
 export default async function handler(req, res) {
@@ -167,7 +167,10 @@ export default async function handler(req, res) {
     if (client && client.isReady()) {
         const msLeft = shutdownAt - Date.now();
         const minLeft = Math.ceil(msLeft / 60000);
-        return res.status(200).send(`Bot already running. Please wait ~${minLeft} minute(s).`);
+        if (shutdownAt) {
+            const timeLeftStr = ` Please wait ~${minLeft} minute(s).`
+        }
+        return res.status(200).send(`Bot already running.${timeLeftStr}`);
     }
 
     // Check IP cooldown
