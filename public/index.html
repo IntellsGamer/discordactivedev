@@ -12,9 +12,11 @@
     <meta property="og:title" content="Get Your Developer Badge" />
     <meta property="og:description" content="This website helps you get the really cool Developer Badge." />
     <meta property="og:image" content="https://discord-active-dev.vercel.app/assets/logo.png?v2" />
-    <!-- Replace with your image -->
     <meta property="og:url" content="https://discord-active-dev.vercel.app/" />
     <meta name="theme-color" content="#2fa867" />
+
+    <!-- <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' https://discord-active-dev.vercel.app; script-src 'self'; style-src 'self' 'unsafe-inline';" /> -->
 
     <script>
         // window.location.href = 'maintenance.html';
@@ -400,26 +402,6 @@
 </head>
 
 <body>
-    <!-- <noscript>
-        <div style="
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    background: black;
-    backdrop-filter: blur(2px);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-    text-align: center;
-    padding: 2rem;
-  ">
-            Enable JavaScript to continue
-            <a href="https://enablejs.com/" target="_blank" rel="noopener"></a>
-        </div>
-    </noscript> -->
-
     <noscript>
         <main class="container" role="alert" aria-live="assertive" style="z-index: 1000;">
             <style>
@@ -436,7 +418,8 @@
             <p style="font-size: 1.05rem; margin-top: 1rem;">
                 This website requires JavaScript to function properly.<br />
                 Please enable JavaScript in your browser settings and reload.<br />
-                <a href="https://enablejs.com/" target="_blank" rel="noopener" style="display:inline-block; margin-top:10px; font-size:0.92em; color:#00ffff; text-decoration:underline; background:rgba(20,20,40,0.12); padding:4px 10px; border-radius:8px; box-shadow:0 1px 6px #00ffff44;">
+                <a href="https://enablejs.com/" target="_blank" rel="noopener"
+                    style="display:inline-block; margin-top:10px; font-size:0.92em; color:#00ffff; text-decoration:underline; background:rgba(20,20,40,0.12); padding:4px 10px; border-radius:8px; box-shadow:0 1px 6px #00ffff44;">
                     Learn how to enable JavaScript
                 </a>
             </p>
@@ -517,10 +500,51 @@
             const token = document.getElementById('token').value.trim();
             const status = document.getElementById('status');
             const button = e.target.querySelector('button');
+
             if (!token) {
-                status.innerText = "⚠️ Please enter your bot token.";
+                return;
+                // status.innerText = "⚠️ Please enter your bot token.";
+                // button.setAttribute('aria-busy', 'false');
+                // return;
+            }
+
+            function base64UrlDecode(str) {
+                try {
+                    str = str.replace(/-/g, '+').replace(/_/g, '/');
+                    while (str.length % 4) {
+                        str += '=';
+                    }
+                    return atob(str);
+                } catch {
+                    return null;
+                }
+            }
+
+            function isLikelyToken(token) {
+                const parts = token.split('.');
+                if (parts.length !== 3) return false;
+                if (!parts.every(part => part.length > 0)) return false;
+
+                const decodedFirstPart = base64UrlDecode(parts[0]);
+                if (!decodedFirstPart) return false;
+
+                if (!/^\d+$/.test(decodedFirstPart)) return false;
+
+                return true;
+            }
+
+            if (!isLikelyToken(token)) {
+                status.innerText = "⚠️ Bot token is invalid.";
+                button.disabled = false;
+                button.setAttribute('aria-busy', 'false');
                 return;
             }
+
+            // if (!tokenPattern.test(token)) {
+            //     button.disabled = false;
+            //     button.setAttribute('aria-busy', 'false');
+            //     return;
+            // }
 
             button.disabled = true;
             button.setAttribute('aria-busy', 'true');
