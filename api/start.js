@@ -1,19 +1,37 @@
 import { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder } from 'discord.js';
 
-let client;
+const clients = new Map(); // token => client instance
+const blockedIPs = new Map(); // ip => unblock timestamp (ms)
+
+const COOLDOWN_MS = 30 * 60 * 1000; // 30 minutes
 
 export default async function handler(req, res) {
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || '';
+    const now = Date.now();
+
+    // Check IP cooldown
+    if (blockedIPs.has(ip)) {
+        const unblockTime = blockedIPs.get(ip);
+        if (now < unblockTime) {
+            const waitSec = Math.ceil((unblockTime - now) / 1000);
+            return res.status(429).send(`⏳ Please wait ${waitSec} seconds before starting another bot.`);
+        } else {
+            blockedIPs.delete(ip); // cooldown expired, remove from block list
+        }
+    }
+
     const token = req.query.token || process.env.DISCORD_TOKEN;
     if (!token) return res.status(400).send('Missing token');
 
-    if (client && client.isReady()) {
-        return res.status(200).send('Bot already running.');
+    if (clients.has(token) && clients.get(token).isReady()) {
+        return res.status(200).send('Bot already running for this token.');
     }
 
-    client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+    clients.set(token, client);
 
     client.once('ready', () => {
-        console.log(`🤖 Logged in as ${client.user.tag}`);
+        console.log(`🤖 Logged in as ${client.user.tag} (token: ${token.substring(0, 8)}...)`);
     });
 
     client.on('interactionCreate', async (interaction) => {
@@ -23,7 +41,7 @@ export default async function handler(req, res) {
             try {
                 await interaction.deferReply();
                 await interaction.editReply(
-                    "✅ You’ve used an application command!\n\n" +
+                    "✅ You've used an application command!\n\n" +
                     "To claim your **Active Developer Badge**, follow these steps:\n" +
                     "1. Visit **https://discord.com/developers/active-developer**.\n" +
                     "2. Select your application (the bot that just responded).\n" +
@@ -31,7 +49,6 @@ export default async function handler(req, res) {
                     "🔁 If you lose the badge due to inactivity, just use another command and revisit that page.\n" +
                     "🕒 You typically have to wait **up to 24 hours** after using a command before claiming the badge."
                 );
-
             } catch (err) {
                 console.error('Interaction error:', err);
             }
@@ -54,14 +71,20 @@ export default async function handler(req, res) {
 
         console.log('✅ Slash command registered');
 
+        // Block IP immediately after starting the bot
+        blockedIPs.set(ip, now + COOLDOWN_MS);
+
         setTimeout(() => {
-            console.log('⌛ Bot shutting down after 5 minutes.');
             client.destroy();
-            res.end('Bot stopped after 5 minutes.');
+            clients.delete(token);
+            console.log(`⌛ Bot stopped for token ${token.substring(0, 8)}...`);
         }, 300000);
 
+        res.end('Bot started successfully.');
+
     } catch (error) {
-        console.error(error);
+        clients.delete(token);
+        console.error('Login error:', error);
         res.status(500).send('Failed to start bot. Check token and try again.');
     }
 }
