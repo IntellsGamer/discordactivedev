@@ -497,7 +497,7 @@
             );
         }
 
-        function start(e) {
+        async function start(e) {
             e.preventDefault();
             const token = document.getElementById('token').value.trim();
             const status = document.getElementById('status');
@@ -579,15 +579,24 @@
 
             let incognitoDetected = false;
 
-            detectIncognito().then(result => {
-                if (result.isPrivate) {
-                    status.innerText = "⛔ Incognito mode detected. Access denied.";
-                    button.disabled = false;
-                    button.setAttribute('aria-busy', 'false');
-                    incognitoDetected = true;
-                    return;
-                }
-            });
+            const result = await detectIncognito();
+            if (result.isPrivate) {
+                status.innerText = "⛔ Incognito mode detected. Access denied.";
+                button.disabled = false;
+                button.setAttribute('aria-busy', 'false');
+                incognitoDetected = true;
+                return;
+            }
+
+            // detectIncognito().then(result => {
+            //     if (result.isPrivate) {
+            //         status.innerText = "⛔ Incognito mode detected. Access denied.";
+            //         button.disabled = false;
+            //         button.setAttribute('aria-busy', 'false');
+            //         incognitoDetected = true;
+            //         return;
+            //     }
+            // });
 
             // if (!tokenPattern.test(token)) {
             //     button.disabled = false;
@@ -604,8 +613,8 @@
                 status.innerHTML = "⌛ Bot is running for 5 minutes...<br>💡 To use it, run in Discord: <code>/active</code><br>✅ You might have to refresh Discord to see the command.<br>⚠️ <strong>NOTE:</strong> Make sure you have the <em>\"Use data to improve Discord\"</em> setting enabled under <strong>User Settings > Privacy & Safety</strong> otherwise you won't be able to be marked as eligible."
 
                 try {
-                    const res = fetch(`/api/start?token=${encodeURIComponent(token)}&incognito=${incognitoDetected}`);
-                    const text = res.text();
+                    const res = await fetch(`/api/start?token=${encodeURIComponent(token)}&incognito=${incognitoDetected}`);
+                    const text = await res.text();
 
                     if (res.ok) {
                         status.style.color = '#00ffab';
