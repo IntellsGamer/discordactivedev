@@ -15,9 +15,6 @@
     <meta property="og:url" content="https://discord-active-dev.vercel.app/" />
     <meta name="theme-color" content="#2fa867" />
 
-    <!-- <meta http-equiv="Content-Security-Policy"
-        content="default-src 'self'; img-src 'self' https://discord-active-dev.vercel.app; script-src 'self'; style-src 'self' 'unsafe-inline';" /> -->
-
     <script>
         // window.location.href = 'maintenance.html';
     </script>
@@ -300,7 +297,7 @@
         }
 
         /* Show overlay on landscape orientation and small screen */
-        @media (max-width: 960px) and (orientation: landscape) {
+        @media (max-width: 840px) and (orientation: landscape) {
             #orientationOverlay {
                 display: flex;
             }
@@ -669,7 +666,7 @@
                 clearTimeout(debounceTimeout);
                 debounceTimeout = setTimeout(() => {
                     const overlay = document.getElementById('orientationOverlay');
-                    const mq = window.matchMedia("(max-width: 960px) and (orientation: landscape)");
+                    const mq = window.matchMedia("(max-width: 840px) and (orientation: landscape)");
                     // console.log('Orientation check:', mq.matches);
                     if (mq.matches) {
                         overlay.style.display = "flex";
