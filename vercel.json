@@ -1,6 +1,8 @@
 {
   "routes": [
     { "src": "/api/start", "dest": "/api/start.js" },
+    { "src": "/license", "dest": "/api/license.js" },
+    { "src": "/source", "dest": "/api/source.js" },
     { "src": "/(.*)", "dest": "/public/index.html" }
   ]
 }
