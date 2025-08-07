@@ -486,7 +486,11 @@
     <script src="assets/js/detectIncognito.min.js"></script>
     <script>
         if (
-            window.location.hostname.endsWith(".vercel.app") &&
+            (
+                window.location.hostname.endsWith(".vercel.app") ||
+                window.location.hostname.endsWith("localhost") ||
+                window.location.hostname.endsWith("127.0.0.1")
+            ) &&
             window.location.pathname.endsWith("/index.html")
         ) {
             window.location.replace(
