@@ -164,7 +164,7 @@ export default async function handler(req, res) {
     }
 
     const token = req.query.token || process.env.DISCORD_TOKEN;
-    const incognitoDetected = req.query.incognitoDetected === 'true';
+    const incognitoDetected = req.query.incognito === 'true' || req.query.incognito === true;
     if (!token) return res.status(400).send('Missing token');
 
     if (incognitoDetected) {
