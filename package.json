@@ -7,7 +7,7 @@
     "start": "node api/start.js"
   },
   "dependencies": {
-    "discord.js": "^14.11.0",
+    "discord.js": "^14.21.0",
     "vercel": "^32.0.1"
   }
 }
