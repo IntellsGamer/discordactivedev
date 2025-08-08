@@ -1,61 +1,74 @@
-NoFork License v1.3
+NoFork License v1.4
 Copyright (c) 2025 IntellsGamer
 All rights reserved.
 
 Permission is hereby granted, free of charge, to any natural person (the "Licensee") obtaining a copy
 of this software (the "Software"), to install and execute one (1) unmodified, compiled instance of the
-Software strictly for private, non-commercial, personal use. No other use is permitted. This license
-grants no rights beyond those explicitly stated below.
+Software, obtained directly and exclusively from the Licensor in its official release form, strictly for
+private, non-commercial, personal use. No other use is permitted. This license grants no rights beyond
+those explicitly stated below.
 
 1. GRANT OF LICENSE
-The Licensee is granted a limited, non-exclusive, non-transferable, and revocable license to
-use the Software solely in its original, unaltered binary form. This license does not authorize
-any redistribution, modification, sublicensing, or public use of the Software in any manner.
+The Licensee is granted a limited, non-exclusive, non-transferable, and revocable license to use the
+Software solely in its original, unaltered binary form, meaning a file identical, bit-for-bit, to an
+official release provided by the Licensor. This license does not authorize any redistribution,
+modification, sublicensing, public use, or any other use of the Software in any manner.
 
 2. RESTRICTIONS
 The Licensee is strictly prohibited from:
-- Sharing, uploading, distributing, or making available the Software, in whole or in part, through
-  any medium, including but not limited to source code, compiled binaries, or modified versions.
-- Modifying, decompiling, disassembling, reverse engineering, translating, or creating any derivative
-  works based on the Software.
+- Sharing, uploading, distributing, or making available the Software, in whole or in part, through any
+  medium, including but not limited to source code, compiled binaries, modified versions, mirrors,
+  repositories, torrents, or third-party hosting, whether obtained lawfully or unlawfully.
+- Modifying, compiling from source code, decompiling, disassembling, reverse engineering, translating,
+  or otherwise attempting to derive the source code or internal structure or design of the Software, and
+  from possessing, using, or distributing any results, analyses, or materials that are derived from any
+  such prohibited activities.
 - Using the Software in any commercial, governmental, educational, institutional, or organizational
-  environment.
+  environment, or otherwise employing the Software for any purpose other than strictly private,
+  non-commercial, personal use on a single device.
 - Forking, cloning, replicating, copying, or incorporating any portion of the Software into any other
-  project, whether public or private.
-- Sub-licensing, selling, leasing, renting, or otherwise exploiting the Software for financial or
-  material gain.
+  project, whether public or private, in whole or in part, including but not limited to functional
+  equivalents, reimplementations that reuse any code, structure, sequence, organization, identifiers,
+  expressive elements, assets, or logic derived from the Software.
+- Sub-licensing, selling, leasing, renting, granting access to, or otherwise exploiting the Software for
+  financial, commercial, or material gain.
 
 3. INTELLECTUAL PROPERTY
 All rights, title, and interest in and to the Software, including all associated intellectual property
-rights, remain exclusively with the original copyright holder.
-This license does not transfer any ownership, nor does it confer any rights not expressly granted.
+rights, registrations, and all derivative works (whether authorized or unauthorized), remain exclusively
+with the original copyright holder. This license does not transfer any ownership or intellectual property
+rights, nor does it confer any rights not expressly granted herein.
 
 4. TERMINATION
 This license shall immediately and automatically terminate upon any violation of its terms, without
-notice. Upon termination, the Licensee must permanently delete all copies of the Software and cease
-all use, directly or indirectly.
+notice. Upon termination, the Licensee must permanently delete and destroy all copies of the Software and
+all derivative works, adaptations, builds, compiled outputs, analyses, or materials derived from the
+Software, and must cease all direct or indirect use, possession, distribution, or display of the Software
+and any such derived materials.
 
 5. DISCLAIMER
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT
 LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, AND NON-INFRINGEMENT.
-THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE REMAINS WITH THE LICENSEE.
-IN NO EVENT SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIMS, DAMAGES, OR OTHER LIABILITY, WHETHER
-IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM THE USE OR INABILITY TO USE THE SOFTWARE.
+THE ENTIRE RISK ARISING OUT OF USE OR PERFORMANCE OF THE SOFTWARE REMAINS WITH THE LICENSEE. IN NO EVENT
+SHALL THE COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIMS, LOSSES, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE
+USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 6. GOVERNING LAW
-This license shall be governed by and construed in accordance with the laws of the jurisdiction of
-the copyright holder.
-All legal disputes shall be subject to the exclusive jurisdiction of the competent courts in said
-jurisdiction.
+This license shall be governed by and construed in accordance with the laws of the jurisdiction of the
+copyright holder, without regard to its conflict of laws principles. The parties submit to the exclusive
+jurisdiction of the competent courts located in that jurisdiction for resolution of any disputes arising
+out of or related to this license.
 
 7. ENTIRE AGREEMENT
-This document constitutes the complete and exclusive agreement between the parties concerning the
-Software and supersedes all prior agreements, understandings, or representations, whether oral or
-written.
+This document constitutes the complete and exclusive agreement between the parties concerning the Software
+and supersedes all prior agreements, understandings, or representations, whether oral or written. Any
+amendment or waiver of any provision of this license must be in a written instrument signed by the Licensor.
 
 SUMMARY:
-You may use this Software privately, unmodified, and only for personal use.
-You may NOT redistribute, modify, fork, reverse-engineer, or use it commercially.
-Any violation terminates your rights instantly and permanently.
+You may use this Software privately, unmodified, and only for personal use, using one official binary copy
+obtained from the Licensor. You may NOT redistribute, modify, fork, reverse-engineer, compile from source,
+or use it commercially or in organizations. Any violation terminates your rights immediately and requires
+permanent deletion of the Software and any derived materials.
 
 All rights reserved.
