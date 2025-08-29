@@ -242,6 +242,15 @@ export default async function handler(req, res) {
         // Added: Mark token as running after successful login
         runningTokens.set(token, true);
 
+        // Register /active globally
+        const rest = new REST({ version: '10' }).setToken(token);
+        const activeCommand = new SlashCommandBuilder()
+            .setName('active')
+            .setDescription('Use this to claim your Active Developer Badge')
+            .toJSON();
+        await rest.put(Routes.applicationCommands(client.user.id), { body: [activeCommand] });
+        console.log('✅ /active command registered globally');
+
         // Block IP immediately after starting the bot
         blockedIPs.set(ip, now + COOLDOWN_MS);
 
